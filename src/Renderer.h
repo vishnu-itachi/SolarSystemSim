@@ -1,7 +1,7 @@
 #pragma once
 #include <GL/glew.h>
 
-#ifdef _DEBUG
+// #ifdef _DEBUG
 #define CheckedGLCall(x)                                                                                               \
     do                                                                                                                 \
     {                                                                                                                  \
@@ -13,10 +13,10 @@
     (x);                                                                                                               \
     PrintOpenGLErrors(#x, __FILE__, __LINE__);
 #define CheckExistingErrors(x) PrintOpenGLErrors(">>BEFORE<< " #x, __FILE__, __LINE__);
-#else
-#define CheckedGLCall(x) (x)
-#define CheckExistingErrors(x)
-#endif
+// #else
+// #define CheckedGLCall(x) (x)
+// #define CheckExistingErrors(x)
+// #endif
 
 void PrintOpenGLErrors(char const *const Function, char const *const File, int const Line);
 
