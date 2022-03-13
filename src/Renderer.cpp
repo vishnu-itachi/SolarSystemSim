@@ -1,4 +1,5 @@
 #include "SolarSystemSim.h"
+#include <format>
 void PrintOpenGLErrors(char const *const Function, char const *const File, int const Line)
 {
     bool Succeeded = true;

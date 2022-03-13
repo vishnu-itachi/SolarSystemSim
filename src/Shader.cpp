@@ -13,6 +13,7 @@ Shader::Shader(const std::string &vertexShaderPath, const std::string &fragmentS
 
 Shader::~Shader()
 {
+    CheckedGLCall(glDeleteProgram(m_RendererID));
 }
 
 std::string Shader::GetShadderFromSource(const std::string &filepath)
@@ -81,5 +82,5 @@ void Shader::bind() const
 
 void Shader::unbind() const
 {
-    CheckedGLCall(glDeleteProgram(m_RendererID));
+    CheckedGLCall(glUseProgram(0));
 }

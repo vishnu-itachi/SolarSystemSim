@@ -2,6 +2,7 @@
 //
 
 #include "SolarSystemSim.h"
+#include <vector>
 
 void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length,
                                 const GLchar *message, const void *userParam)
@@ -38,12 +39,9 @@ int main()
 
     {
 
-        std::string vertexShaderPath = "D:/Projects/cmake/SolarSystemSim/res/shaders/Vertex.vert";
-        std::string fragmentShaderPath = "D:/Projects/cmake/SolarSystemSim/res/shaders/Fragment.frag";
-
-        GLfloat const Vertices[] = {0.0f, 0.5f, 0.5f, -0.5f, -0.5f, -0.5f};
-
-        GLuint const Elements[] = {0, 1, 2};
+        std::vector<CelestialBody> bodies;
+        bodies.push_back(CelestialBody("Sun", 0.1f, 10e10, Point(0.0f, 0.0f)));
+        bodies.push_back(CelestialBody("Earth", 0.1f, 1e10, Point(0.5f, 0.0f)));
 
         GLuint VAO; // vb + layout
         CheckedGLCall(glGenVertexArrays(1, &VAO));
