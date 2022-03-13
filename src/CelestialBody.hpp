@@ -7,16 +7,16 @@ class CelestialBody
 {
 private:
     std::string m_Name;
-    float m_radius;
+    int m_radius;
     float m_mass;
     Point m_position;
 
 public:
-    CelestialBody(const std::string &name, float radius, float mass, Point position)
+    CelestialBody(const std::string &name, int radius, float mass, Point position)
         : m_Name(name), m_radius(radius), m_mass(mass), m_position(position)
     {
     }
-    float GetRadius() const
+    int GetRadius() const
     {
         return m_radius;
     }
