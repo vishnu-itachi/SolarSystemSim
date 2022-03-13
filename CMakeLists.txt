@@ -2,8 +2,12 @@
 # project specific logic here.
 #
 cmake_minimum_required (VERSION 3.8)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 17)
 project ("SolarSystemSim")
+
+SET(OPENGL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/include ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include)
+SET(OPENGL_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/glew32s.lib ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/GLU32.lib ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/lib-v2022/glfw3.lib Opengl32)
+
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
@@ -16,7 +20,7 @@ add_executable (${PROJECT_NAME}
 				"src/IndexBuffer.h"
 				"src/IndexBuffer.cpp" 
 				"src/Shader.cpp" 
-				"src/Shader.h" "Dependencies/GLEW/include/GL/GLU.h")
+				"src/Shader.h" "src/CelestialBody.hpp" "src/Point.hpp")
 
 
 # find_package(GLEW REQUIRED)
@@ -24,8 +28,6 @@ add_executable (${PROJECT_NAME}
 # find_package(glfw3 CONFIG REQUIRED)
 # target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
 
-SET(OPENGL_INCLUDE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/include ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/include)
-SET(OPENGL_LIBRARIES ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/glew32s.lib ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLEW/lib/GLU32.lib ${CMAKE_CURRENT_SOURCE_DIR}/Dependencies/GLFW/lib-v2022/glfw3.lib Opengl32)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE GLEW_STATIC)
 target_include_directories(${PROJECT_NAME} PRIVATE ${OPENGL_INCLUDE_DIRS})
