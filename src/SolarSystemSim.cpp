@@ -33,8 +33,6 @@ void add_point_vertices(std::vector<CelestialBody> &bodies, std::vector<float> &
 
         float x_radius = (float) body.GetRadius() / SCREEN_WIDTH;
         float y_radius = (float) body.GetRadius() / SCREEN_HEIGHT;
-        std::cout << "x_radius: " << x_radius << std::endl;
-        std::cout << "y_radius: " << y_radius << std::endl;
 		// add the 6 vertices for the triangles.
 		int offset = 0;
 		quad[24 * i + offset++] = body.GetPosition().x + x_radius;
@@ -111,9 +109,6 @@ int main()
         // CheckedGLCall(glBindVertexArray(VAO));
 
         // float vertices[] = {};
-        std::vector<float> vertices;
-        add_point_vertices(bodies, vertices);
-        VertexBuffer vb(vertices.data(), vertices.size() * 4);
         // iBuffer ib(Elements, 3);
 
         std::string vertexShaderPath = "res/shaders/Vertex.vert";
@@ -124,6 +119,7 @@ int main()
 
         // ib.bind();
         // vb.bind();
+        VertexBuffer vb;
         shaderProgram.bind();
 
         while (!glfwWindowShouldClose(window))
@@ -131,6 +127,10 @@ int main()
             // CheckedGLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
             CheckedGLCall(glClear(GL_COLOR_BUFFER_BIT));
             
+            std::vector<float> vertices;
+            add_point_vertices(bodies, vertices);
+            vb.send_data(vertices.data(), vertices.size() * 4);
+
             int ATTRIB_VERTEX = glGetAttribLocation(shaderProgram.getShaderProgram(), "vertex");
             int ATTRIB_VALUE = glGetAttribLocation(shaderProgram.getShaderProgram(), "value");
             // std::cout << ATTRIB_VERTEX << " " << ATTRIB_VALUE << " " << vertices[0] << " " << vertices[1] << std::endl;
