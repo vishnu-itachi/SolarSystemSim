@@ -19,49 +19,43 @@ void GLAPIENTRY MessageCallback(GLenum source, GLenum type, GLuint id, GLenum se
 
 void add_point_vertices(std::vector<CelestialBody> &bodies, std::vector<float> &q1)
 {
-	// Use a Vertex Array Object
-	// GLuint vao;
-	// glGenVertexArrays(1, &vao);
-	// glBindVertexArray(vao);
-
 	float *quad = new float[bodies.size() * 24];
-	Point resolution = Point(SCREEN_WIDTH, SCREEN_HEIGHT);
+	vector resolution = vector(SCREEN_WIDTH, SCREEN_HEIGHT);
 	for (int i = 0; i < bodies.size(); i++) {
-		// transform the body
         auto body = bodies[i];
-        auto center = body.GetPosition();
+        auto center = body.position();
 
         float x_radius = (float) body.GetRadius() / SCREEN_WIDTH;
         float y_radius = (float) body.GetRadius() / SCREEN_HEIGHT;
 		// add the 6 vertices for the triangles.
 		int offset = 0;
-		quad[24 * i + offset++] = body.GetPosition().x + x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y - y_radius;
+		quad[24 * i + offset++] = body.position()._a + x_radius;
+		quad[24 * i + offset++] = body.position()._b - y_radius;
 		quad[24 * i + offset++] = 1;
 		quad[24 * i + offset++] = -1;
 
-		quad[24 * i + offset++] = body.GetPosition().x + x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y + y_radius;
+		quad[24 * i + offset++] = body.position()._a + x_radius;
+		quad[24 * i + offset++] = body.position()._b + y_radius;
 		quad[24 * i + offset++] = 1;
 		quad[24 * i + offset++] = 1;
 
-		quad[24 * i + offset++] = body.GetPosition().x - x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y + y_radius;
+		quad[24 * i + offset++] = body.position()._a - x_radius;
+		quad[24 * i + offset++] = body.position()._b + y_radius;
 		quad[24 * i + offset++] = -1;
 		quad[24 * i + offset++] = 1;
 
-		quad[24 * i + offset++] = body.GetPosition().x - x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y + y_radius;
+		quad[24 * i + offset++] = body.position()._a - x_radius;
+		quad[24 * i + offset++] = body.position()._b + y_radius;
 		quad[24 * i + offset++] = -1;
 		quad[24 * i + offset++] = 1;
 
-		quad[24 * i + offset++] = body.GetPosition().x - x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y - y_radius;
+		quad[24 * i + offset++] = body.position()._a - x_radius;
+		quad[24 * i + offset++] = body.position()._b - y_radius;
 		quad[24 * i + offset++] = -1;
 		quad[24 * i + offset++] = -1;
 
-		quad[24 * i + offset++] = body.GetPosition().x + x_radius;
-		quad[24 * i + offset++] = body.GetPosition().y - y_radius;
+		quad[24 * i + offset++] = body.position()._a + x_radius;
+		quad[24 * i + offset++] = body.position()._b - y_radius;
 		quad[24 * i + offset++] = 1;
 		quad[24 * i + offset++] = -1;
 	}
@@ -101,9 +95,9 @@ int main()
     {
 
         std::vector<CelestialBody> bodies;
-        bodies.push_back(CelestialBody("Sun", 30, 10e10, Point(.0f, .0f)));
-        bodies.push_back(CelestialBody("Earth", 20, 1e10, Point(.5f, .0f)));
-
+        bodies.push_back(CelestialBody("Sun", 30, 1e14, vector(.0f, .0f), vector(640, 480), vector(.0f, .0f)));
+        bodies.push_back(CelestialBody("Earth", 20, 1e10, vector(.5f, .0f), vector(640, 480), vector(.0f, 4000.0f)));
+        Simulator sim(bodies);
         // GLuint VAO; // vb + layout
         // CheckedGLCall(glGenVertexArrays(1, &VAO));
         // CheckedGLCall(glBindVertexArray(VAO));
@@ -111,6 +105,8 @@ int main()
         // float vertices[] = {};
         // iBuffer ib(Elements, 3);
 
+        // std::string vertexShaderPath = "../res/shaders/Vertex.vert";
+        // std::string fragmentShaderPath = "../res/shaders/Fragment.frag";
         std::string vertexShaderPath = "res/shaders/Vertex.vert";
         std::string fragmentShaderPath = "res/shaders/Fragment.frag";
         Shader shaderProgram(vertexShaderPath, fragmentShaderPath);
@@ -128,7 +124,8 @@ int main()
             CheckedGLCall(glClear(GL_COLOR_BUFFER_BIT));
             
             std::vector<float> vertices;
-            add_point_vertices(bodies, vertices);
+            add_point_vertices(sim.bodies(), vertices);
+            // add_point_vertices(bodies, vertices);
             vb.send_data(vertices.data(), vertices.size() * 4);
 
             int ATTRIB_VERTEX = glGetAttribLocation(shaderProgram.getShaderProgram(), "vertex");
@@ -143,7 +140,8 @@ int main()
 
             CheckedGLCall(glDrawArrays(GL_TRIANGLES, 0, vertices.size()));
             // shaderProgram.unbind();
-
+            sim.forward();
+            sim.wait();
             glfwSwapBuffers(window);
             glfwPollEvents();
         }

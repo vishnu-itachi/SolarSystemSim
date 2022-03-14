@@ -15,3 +15,4 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include "CelestialBody.hpp"
+#include "Simulator.h"
