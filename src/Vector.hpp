@@ -51,7 +51,8 @@ public:
     {
     }
 
-    friend vector operator*(const vector &left, const float &right)
+    template<typename T>
+    friend vector operator*(const vector &left, const T &right)
     {
         return vector(left._a * right, left._b * right);
     }

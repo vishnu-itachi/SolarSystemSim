@@ -25,9 +25,9 @@ public:
         : m_name(name), m_radius(radius), m_mass(mass), m_position(position), m_astro_scale(astro_scale), m_velocity(velocity)
     {
     }
-    std::string name() const
+    int name() const
     {
-        return m_name;
+        return (m_name == "Sun") ? 0 : 1;
     }
 
     int GetRadius() const
@@ -68,7 +68,7 @@ public:
     {
         auto astro_position = m_position * m_astro_scale;
         astro_position += duration.count() * m_velocity;
-        m_position  = astro_position / m_astro_scale;
+        m_position = astro_position / m_astro_scale;
         return m_position;
     }
 

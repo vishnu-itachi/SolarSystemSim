@@ -7,7 +7,6 @@
 #include <thread>
 #include <vector>
 
-
 using namespace std::chrono;
 typedef std::chrono::duration<float> fseconds;
 
@@ -16,6 +15,7 @@ class Simulator
 private:
     std::vector<CelestialBody> _bodies;
     fseconds _time_step{10ms};
+    double _time_scale = 365 * 24 * 60 * 60;
 
 public:
     Simulator()
@@ -31,6 +31,11 @@ public:
     {
     }
 
+    Simulator(std::vector<CelestialBody> &bodies, std::chrono::milliseconds time_step, double time_scale)
+        : _bodies(bodies), _time_step(time_step), _time_scale(365 * 24 * 60 * 60 / time_scale)
+    {
+    }
+
     std::vector<CelestialBody> &bodies()
     {
         return _bodies;
@@ -41,15 +46,13 @@ public:
 
         for (auto &bodya : _bodies)
         {
-            bodya.travel(_time_step);
+            bodya.travel(_time_step * _time_scale);
         }
 
-        std::map<std::string, vector> forces;
-        // double G = pow(10, -11);
-        double G = pow(10, -4);
+        std::vector<vector> forces(2);
+        double G = 6.6743e-20;
         for (auto &bodya : _bodies)
         {
-            forces[bodya.name()] = vector();
             for (auto bodyb : _bodies)
             {
                 if (bodya == bodyb)
@@ -59,7 +62,7 @@ public:
                     separation.direction() * G * bodya.GetMass() * bodyb.GetMass() / pow(separation.magnitude(), 2);
                 forces[bodya.name()] += force;
             }
-            bodya.apply_force(forces[bodya.name()], _time_step);
+            bodya.apply_force(forces[bodya.name()], _time_step * _time_scale);
         }
     }
 
