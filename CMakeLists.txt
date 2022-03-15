@@ -20,7 +20,8 @@ add_executable (${PROJECT_NAME}
 				"src/IndexBuffer.h"
 				"src/IndexBuffer.cpp" 
 				"src/Shader.cpp" 
-				"src/Shader.h" "src/CelestialBody.hpp" "src/Point.hpp")
+				"src/Shader.h"
+				"src/CelestialBody.hpp")
 
 
 # find_package(GLEW REQUIRED)
