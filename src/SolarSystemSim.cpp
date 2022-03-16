@@ -116,25 +116,25 @@ int main()
         glEnableVertexAttribArray(ATTRIB_VALUE);
         glVertexAttribPointer(ATTRIB_VALUE, 2, GL_FLOAT, GL_FALSE, 16, BUFFER_OFFSET(8));
 
-        std::vector<std::vector<float>> simulated_positions;
+        std::vector<float> simulated_positions;
         auto num_steps = 1000;
         for (unsigned int i = 0; i < num_steps; i++)
         {
             std::vector<float> vertices;
             add_point_vertices(sim.bodies(), vertices);
-            simulated_positions.push_back(vertices);
+            simulated_positions.insert(simulated_positions.end(), vertices.begin(),vertices.end());
             sim.forward();
         }
+        vb.send_data(simulated_positions.data(), simulated_positions.size() * 4);
+        std::cout << simulated_positions.size() << "\n";
 
         int i = 0;
         while (!glfwWindowShouldClose(window) && i < simulated_positions.size())
         {
             CheckedGLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-            auto vertices = simulated_positions[i++];
-            vb.send_data(vertices.data(), vertices.size() * 4);
-
-            CheckedGLCall(glDrawArrays(GL_TRIANGLES, 0, vertices.size()));
+            auto num_vertices = simulated_positions.size() / num_steps / 4;
+            CheckedGLCall(glDrawArrays(GL_TRIANGLES, num_vertices * i++, num_vertices));
 
             sim.wait();
             
